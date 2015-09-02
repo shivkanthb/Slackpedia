@@ -15,8 +15,8 @@ app.get('/', function(req,res){
 app.post('/slackpedia', function(req,res){
 
 
-var slack_webhook_url ="";
-var icon_url = "";
+var slack_webhook_url ="https://hooks.slack.com/services/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";
+ // var icon_url = ""; current an emoji is set on slack. 
 var wiki_lang = "en";
 var search_limit = "3";
 
@@ -36,6 +36,13 @@ var encoded_text = encodeURIComponent(text);
 var wiki_url = "http://"+wiki_lang+".wikipedia.org/w/api.php?action=opensearch&search="+encoded_text+
 "&format=json&limit="+search_limit;
 
+
+	request.get({url:wiki_url, headers: headers}, function(err,response,body){
+		var body = JSON.parse(body);
+
+		console.log(body);
+		res.send(body[0]);
+	});
 });
 
 
