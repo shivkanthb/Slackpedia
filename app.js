@@ -40,8 +40,33 @@ var wiki_url = "http://"+wiki_lang+".wikipedia.org/w/api.php?action=opensearch&s
 	request.get({url:wiki_url, headers: headers}, function(err,response,body){
 		var body = JSON.parse(body);
 
-		console.log(body);
-		res.send(body[0]);
+		//console.log(body);
+		//res.send(body[0]);
+
+		if(response.statusCode !== 200){
+			res.send("Something went wrong..");
+		}
+		else
+		{
+
+			var options = {
+				url : slack_webhook_url,
+				method : 'POST',
+				username : user_name,
+				channel : channel_id,
+				text : body[1],
+				mrkdwn : true,
+				headers: {
+            accept: '*/*',
+            'Content-Length': Buffer.byteLength(body[1]),
+            'Content-Type': 'application/json'
+        		}
+			};
+			request.post(options, function(err,response, body){
+				console.log(body);
+			});
+    		
+		}
 	});
 });
 
