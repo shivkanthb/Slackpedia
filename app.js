@@ -4,6 +4,10 @@ var express= require('express');
 var app = express();
 var bodyParser = require('body-parser');
 var port = process.env.PORT || 3000;
+var Slack = require('node-slack');
+
+var slack_webhook_url ="https://hooks.slack.com/services/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";
+var slack = new Slack(slack_webhook_url);
 
 app.use(bodyParser.urlencoded({ extended: true }));
 app.get('/', function(req,res){
@@ -15,10 +19,10 @@ app.get('/', function(req,res){
 app.post('/slackpedia', function(req,res){
 
 
-var slack_webhook_url ="https://hooks.slack.com/services/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";
+
  // var icon_url = ""; current an emoji is set on slack. 
 var wiki_lang = "en";
-var search_limit = "3";
+var search_limit = "4";
 
 var headers = { 
     'User-Agent': 'Slackpedia/1.0 (https://github.com/shivkanthb/Slackpedia; shivkanthb@gmail.com)'
@@ -38,35 +42,43 @@ var wiki_url = "http://"+wiki_lang+".wikipedia.org/w/api.php?action=opensearch&s
 
 
 	request.get({url:wiki_url, headers: headers}, function(err,response,body){
-		var body = JSON.parse(body);
-
-		//console.log(body);
+		//var body = JSON.parse(body);
+		//var bodyText = body[2];
+		console.log(body);
 		//res.send(body[0]);
 
-		if(response.statusCode !== 200){
-			res.send("Something went wrong..");
-		}
-		else
-		{
+		// if(response.statusCode !== 200){
+		// 	res.send("Something went wrong..");
+		// }
+		// else
+		// {
 
-			var options = {
-				url : slack_webhook_url,
-				method : 'POST',
-				username : user_name,
-				channel : channel_id,
-				text : body[1],
-				mrkdwn : true,
-				headers: {
-            accept: '*/*',
-            'Content-Length': Buffer.byteLength(body[1]),
-            'Content-Type': 'application/json'
-        		}
-			};
-			request.post(options, function(err,response, body){
-				console.log(body);
-			});
+		// 	var options = {
+		// 		url : slack_webhook_url,
+		// 		method : 'POST',
+		// 		username : user_name,
+		// 		channel : channel_id,
+		// 		text : body[1],
+		// 		mrkdwn : true,
+		// 		headers: {
+  //           accept: '*/*',
+  //           'Content-Length': Buffer.byteLength(body[1]),
+  //           'Content-Type': 'application/json'
+  //       		}
+		// 	};
+		// 	request.post(options, function(err,response, body){
+		// 		console.log(body);
+		// 	});
     		
-		}
+		// }
+console.log('Sending message ' + body+' to channel '+channel_id);
+
+			slack.send({
+			text: body,
+			channel: '#slacktest',
+			username: 'Slackpedia'
+			});
+
 	});
 });
 
