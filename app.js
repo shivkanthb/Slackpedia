@@ -46,35 +46,11 @@ var wiki_url = "http://"+wiki_lang+".wikipedia.org/w/api.php?action=opensearch&s
 		//var bodyText = body[2];
 		console.log(body);
 		//res.send(body[0]);
-
-		// if(response.statusCode !== 200){
-		// 	res.send("Something went wrong..");
-		// }
-		// else
-		// {
-
-		// 	var options = {
-		// 		url : slack_webhook_url,
-		// 		method : 'POST',
-		// 		username : user_name,
-		// 		channel : channel_id,
-		// 		text : body[1],
-		// 		mrkdwn : true,
-		// 		headers: {
-  //           accept: '*/*',
-  //           'Content-Length': Buffer.byteLength(body[1]),
-  //           'Content-Type': 'application/json'
-  //       		}
-		// 	};
-		// 	request.post(options, function(err,response, body){
-		// 		console.log(body);
-		// 	});
-    		
-		// }
-console.log('Sending message ' + body+' to channel '+channel_id);
+		bodyText = "/"+text+"\n"+body;
+console.log('Sending message ' + bodyText+' to channel '+channel_id);
 
 			slack.send({
-			text: body,
+			text: bodyText,
 			channel: '#slacktest',
 			username: 'Slackpedia'
 			});
